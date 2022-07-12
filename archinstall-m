@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+echo
+printf 'BUGFIX require: change --efi-directory=/boot to --efi-directory=/boot/efi in next line by nano. (Enter) '
+read
+nano +933 /usr/lib/python*/site-packages/archinstall/lib/installer.py
+echo
+read -p "BUGFIX require: add '=None' after 'option'. (Enter) "
+nano +258 /usr/lib/python*/site-packages/archinstall/examples/swiss.py
+
+archinstall --script swiss --mode only_os

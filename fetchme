@@ -5,5 +5,7 @@ fi
 rm -f a tgz LICENSE fetchme*
 find . -type f -exec less {} \;
 
-printf '\nenable parallel download(Y/n)? '; read r
+echo
+printf 'Enable parallel download? (Y/n) '
+read r
 [[ "$r" =~ ^(Y|y|)$ ]] && sed -i '/^#Parall/ s/^#//' /etc/pacman.conf

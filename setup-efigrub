@@ -1,0 +1,5 @@
+#!/bin/bash
+genfstab -U /mnt >/mnt/etc/fstab
+sed -i '/btrfs/ s/,subvolid=[0-9]*,/,/' etc/fstab
+arch-chroot . grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot . grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB

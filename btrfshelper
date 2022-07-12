@@ -1,0 +1,77 @@
+#!/bin/bash
+set -e
+
+while :; do
+    echo
+    echo '1. create btrfs parition'
+    echo '2. mount btrfs parition'
+    echo '0. cancel'
+    echo
+    printf 'Choice: '
+    read r
+    case $r in
+    1)
+        while :; do
+            echo
+            lsblk
+            echo
+            printf 'the required partition block device name (/dev/?): '
+            read DEVICE_NAME
+            DEVICE_FILE="/dev/$DEVICE_NAME"
+            if [ -b "$DEVICE_FILE" ]; then
+                break
+            else
+                echo 'Invalid device name!'
+                sleep 1
+            fi
+        done
+        echo
+        printf 'Encrypt it by luks? (Y/n) '
+        if [[ "$r" =~ ^(Y|y|)$ ]]; then
+            cryptsetup close cryptlvm &>/dev/null || :
+            cryptsetup luksFormat -q "$DEVICE_FILE"
+            printf "Again "
+            cryptsetup open "$DEVICE_FILE" cryptlvm
+            DEVICE_FILE=/dev/mapper/cryptlvm
+        fi
+        mkfs.btrfs "$DEVICE_FILE"
+        mkdir -p /mnt/btrfs
+        mount "$DEVICE_FILE" /mnt/btrfs
+        btrfs subvol create /mnt/btrfs/@
+        btrfs subvol create /mnt/btrfs/@home
+        umount /mnt/btrfs
+        rmdir /mnt/btrfs
+        mkdir -p /mnt/archinstall
+        ;;
+    2)
+        while :; do
+            echo
+            lsblk
+            echo
+            printf 'btrfs block device full path: '
+            read DEVICE_FILE
+            if [ -b "$DEVICE_FILE" ]; then
+                break
+            else
+                echo 'Invalid path!'
+                sleep 1
+            fi
+        done
+        ;;
+    0) ;;
+    *)
+        echo 'Invalid choice!'
+        sleep 1
+        continue
+        ;;
+    esac
+    break
+done
+
+mount -o relatime,compress=zstd:1,space_cache=v2,subvol=@ "$DEVICE_FILE" /mnt/archinstall
+mkdir -p /mnt/archinstall/home
+mount -o relatime,compress=zstd:1,space_cache=v2,subvol=@home "$DEVICE_FILE" /mnt/archinstall/home
+
+echo
+echo 'mount | grep /mnt/archinstall :'
+mount | grep /mnt/archinstall

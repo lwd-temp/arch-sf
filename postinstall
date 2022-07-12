@@ -1,0 +1,81 @@
+#!/bin/bash
+set -e
+
+echo
+echo 'Grub> optimize:'
+echo '- remember selection'
+echo '- reduce time'
+echo '- better theme'
+printf 'Apply ? (Y/n) '
+read r
+[[ "$r" =~ ^(Y|y|)$ ]] && BETTER_GRUB=1
+
+echo
+printf 'Grub> existed Windows OS ? (y/N) '
+read r
+[[ "$r" =~ ^(Y|y)$ ]] && EXISTED_WINDOWS=1
+
+echo
+printf 'Firefox> install (Y/n)? '
+read r
+[[ "$r" =~ ^(Y|y|)$ ]] && ADD_FIREFOX=1
+
+if [ -v ADD_FIREFOX ]; then
+    echo
+    echo 'Firefox> extensions:'
+    echo '- Dark Reader'
+    echo '- decentraleyes'
+    echo '- uBlock Origin'
+    echo '- Tree Style Tab'
+    printf 'Firefox> add these? (y/N) '
+    read r
+    [[ "$r" =~ ^(Y|y|)$ ]] && ADD_FIREFOX_EXT=1
+fi
+
+echo
+printf 'setup development environment? (Y/n) '
+read r
+[[ "$r" =~ ^(Y|y|)$ ]] && SETUP_DEVENV=1
+
+echo
+printf 'Add coding or terminal-used fonts `Cascadia Code`? (Y/n) '
+read r
+[[ "$r" =~ ^(Y|y|)$ ]] && ADD_CODING_FONTS=1
+
+systemctl restart reflector
+cd /mnt/archinstall
+
+pacstrap . gufw git lsb-release noto-fonts-emoji
+[ "$(arch-chroot . pacman -Qs konsole)" ] &&
+    pacstrap . yakuake
+[ -d usr/share/discover ] && pacstrap . packagekit-qt5 || :
+
+if [ -v BETTER_GRUB ]; then
+    #:
+    arch-chroot . sed -i "/GRUB_DEFAULT/ s/=.*/=saved/" /etc/default/grub
+    arch-chroot . sed -i '/GRUB_SAVEDEFAULT/ s/^#//' /etc/default/grub
+    #:
+    arch-chroot . sed -i "/GRUB_TIMEOUT/ s/=.*/=2/" /etc/default/grub
+    #:
+    pacstrap . breeze-grub
+    cp -r usr/share/grub/themes/breeze boot/grub/themes
+    sed -i -e '/# title/,/}/{/top/s/225.*/256/}' -e '/+ boot_menu {/,/}/{s/400/800/;s/200/400/;/item_height =/s/33/64/;/font =/s/16/32/}' -e '/+ vbox {/,/^}/{/top =/s/+113.*/+200/;s/"Unifont Regular 14"/"Unifont Regular 16"/}' boot/grub/themes/breeze/theme.txt
+    echo 'GRUB_THEME=/boot/grub/themes/breeze/theme.txt' | arch-chroot . tee -a etc/default/grub &>/dev/null
+fi
+
+if [ -v EXISTED_WINDOWS ]; then
+    pacstrap . os-prober ntfs-3g
+    arch-chroot . sed -i '/^#GRUB_DISABLE_OS_PROBER/ s/^#//' /etc/default/grub
+fi
+
+if [ -v ADD_FIREFOX ]; then
+    pacstrap . firefox
+    arch-chroot . cp /usr/share/applications/firefox.desktop /usr/share/applications/firefox-wayland.desktop
+    arch-chroot . sed -i -e 's/^Name=Firefox$/Name=Wayland Firefox/' -e 's/^Exec=/Exec=env MOZ_ENABLE_WAYLAND=1 /' /usr/share/applications/firefox-wayland.desktop
+    [ -v ADD_FIREFOX_EXT ] &&
+        pacstrap . firefox-dark-reader firefox-decentraleyes firefox-ublock-origin firefox-tree-style-tab
+fi
+
+[ -v SETUP_DEVENV ] && pacstrap . base-devel
+
+[ -v ADD_CODING_FONTS ] && pacstrap . ttf-cascadia-code

@@ -2,7 +2,9 @@ curl -fsSL -o tgz https://gitcode.net/lbh/ais/-/archive/main/ais-main.tar.gz
 tar zxf tgz --strip-components=1
 FETCHDED=1 source ./fetchme
 
-printf '\nprefer the fastest one of China package mirrors (Y/n)? '; read r
+echo
+printf 'Prefer the fastest one of China package mirrors? (Y/n) '
+read r
 if [[ "$r" =~ ^(Y|y|)$ ]]; then
     pushd /etc/xdg/reflector >/dev/null
     echo "-c cn" | tee -a reflector.conf &>/dev/null
