@@ -1,0 +1,3 @@
+curl -fsSL -o tgz https://gitcode.net/lbh/ais/-/archive/main/ais-main.tar.gz
+tar zxf tgz --strip-components=1
+FETCHDED=1 source ./fetchme

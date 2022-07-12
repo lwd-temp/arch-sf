@@ -1,0 +1,6 @@
+if [ ! -v FETCHDED ]; then
+    curl -fsSL -o tgz https://github.com/littleboyharry/archinstall-scripts/archive/refs/heads/main.tar.gz
+    tar zxf tgz --strip-components=1
+fi
+rm -f a tgz LICENSE fetchme*
+find . -type f -exec less {} \;
