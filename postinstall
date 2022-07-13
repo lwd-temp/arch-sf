@@ -47,7 +47,10 @@ printf 'Add coding or terminal-used fonts `Cascadia Code`? (Y/n) '
 read r
 [[ "$r" =~ ^(Y|y|)$ ]] && ADD_CODING_FONTS=1
 
+echo
+echo 'Testing fastest mirror ...'
 systemctl restart reflector
+echo
 cd /mnt/archinstall
 
 pacstrap . gufw git lsb-release noto-fonts-emoji
@@ -63,9 +66,15 @@ if [ -v BETTER_GRUB ]; then
     arch-chroot . sed -i "/GRUB_TIMEOUT/ s/=.*/=2/" /etc/default/grub
     #:
     pacstrap . breeze-grub
-    cp -r usr/share/grub/themes/breeze boot/grub/themes
-    sed -i -e '/# title/,/}/{/top/s/225.*/256/}' -e '/+ boot_menu {/,/}/{s/400/800/;s/200/400/;/item_height =/s/33/64/;/font =/s/16/32/}' -e '/+ vbox {/,/^}/{/top =/s/+113.*/+200/;s/"Unifont Regular 14"/"Unifont Regular 16"/}' boot/grub/themes/breeze/theme.txt
     echo 'GRUB_THEME=/boot/grub/themes/breeze/theme.txt' | tee -a etc/default/grub &>/dev/null
+    pushd usr/share/grub/themes/breeze
+    cp -n theme.txt theme.txt.old
+    sed -i \
+        -e '/# title/,/}/{/top/s/225.*/256/}' \
+        -e '/+ boot_menu {/,/}/{s/400/800/;s/200/400/;/item_height =/s/33/64/;/font =/s/16/32/}' \
+        -e '/+ vbox {/,/^}/{/top =/s/+113.*/+200/;s/"Unifont Regular 14"/"Unifont Regular 16"/}' \
+        theme.txt
+    popd
 fi
 
 if [ -v ENCREASE_CONSOLEFONTSIZE ]; then
