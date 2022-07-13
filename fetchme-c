@@ -11,5 +11,6 @@ if [[ "$r" =~ ^(Y|y|)$ ]]; then
     sed -i -e '/^--ipv4$/d' -e '/^--ipv6$/d' reflector.conf
     systemctl restart reflector
     sed -i '/^#Parall/ s/^#//' /etc/pacman.conf
+    popd
     pacman -Sy --noconfirm
 fi

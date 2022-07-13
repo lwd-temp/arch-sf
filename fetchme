@@ -3,6 +3,8 @@ if [ ! -v FETCHDED ]; then
     tar zxf tgz --strip-components=1
 fi
 rm -f a tgz LICENSE fetchme*
+printf 'Audit scripts: press u, d scroll, press q to confirm. (Press Enter to continue)'
+read
 find . -type f -exec less {} \;
 
 echo
