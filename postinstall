@@ -1,64 +1,52 @@
 #!/bin/bash
 set -e
 
-echo
-echo 'Grub> optimize:'
-echo '- remember selection'
-echo '- reduce time'
-echo '- better theme'
-printf 'Apply ? (Y/n) '
-read r
-[[ "$r" =~ ^(Y|y|)$ ]] && BETTER_GRUB=1
+DEVUTIL_PKGS=(git base-devel man-db unzip tree)
 
-echo
-printf 'Grub> existed Windows OS ? (y/N) '
-read r
-[[ "$r" =~ ^(Y|y)$ ]] && EXISTED_WINDOWS=1
+# Whiptail auto-size
+WT_MENU_HEIGHT=6
+WT_HEIGHT=$((WT_MENU_HEIGHT + 7 + 10))
+WT_WIDTH=$(tput cols)
+[ -z "$WT_WIDTH" ] || [ "$WT_WIDTH" -ge 68 ] && WT_WIDTH=68
 
-echo
-printf 'encrease console font size ? (Y/n) '
-read r
-[[ "$r" =~ ^(Y|y|)$ ]] && ENCREASE_CONSOLEFONTSIZE=1
-
-echo
-printf 'Add Firefox browser (Y/n)? '
-read r
-[[ "$r" =~ ^(Y|y|)$ ]] && ADD_FIREFOX=1
-
-if [ -v ADD_FIREFOX ]; then
-    echo
-    echo 'Firefox> extensions:'
-    echo '- Dark Reader'
-    echo '- decentraleyes'
-    echo '- uBlock Origin'
-    echo '- Tree Style Tab'
-    printf 'Firefox> add these? (Y/n) '
-    read r
-    [[ "$r" =~ ^(Y|y|)$ ]] && ADD_FIREFOX_EXT=1
-fi
-
-echo
-printf 'Add development utils? (Y/n) '
-read r
-[[ "$r" =~ ^(Y|y|)$ ]] && ADD_DEVUTILS=1
-
-echo
-printf 'Add coding or terminal-used fonts `Cascadia Code`? (Y/n) '
-read r
-[[ "$r" =~ ^(Y|y|)$ ]] && ADD_CODING_FONTS=1
+choice=$(whiptail --clear --title 'Arch Linux - Postinstall Options' \
+    --checklist "
+    *  add WinOS to GRUB:
+       for dual os
+    *  optimize GRUB:
+       remember selection & reduce wait time & better theme
+    *  enlarge console font:
+       keep 2x font size in tty permanently
+    *  add development utils:
+       $DEVUTIL_PKGS
+    *  add Cascadia Code font:
+       for coding or terminal-used
+" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
+    'add WinOS to GRUB' '' OFF \
+    'optimize GRUB' '' ON \
+    'enlarge console font' '' ON \
+    'add Firefox browser' '' ON \
+    'add development utils' '' ON \
+    'add Cascadia Code font' '' ON \
+    3>&1 1>&2 2>&3)
 
 echo
 echo 'Testing fastest mirror ...'
 systemctl restart reflector
 echo
+
 cd /mnt/archinstall
 
-pacstrap . gufw git lsb-release noto-fonts-emoji
-[ "$(arch-chroot . pacman -Qs konsole)" ] &&
-    pacstrap . yakuake
+pacstrap . lsb-release noto-fonts-emoji gufw
+[ "$(arch-chroot . pacman -Qs konsole)" ] && pacstrap . yakuake
 [ -d usr/share/discover ] && pacstrap . packagekit-qt5 || :
 
-if [ -v BETTER_GRUB ]; then
+case "$choice" in
+*"add WinOS to GRUB"*)
+    arch-chroot . sed -i '/^#GRUB_DISABLE_OS_PROBER/ s/^#//' /etc/default/grub
+    pacstrap . os-prober ntfs-3g
+    ;;&
+*"optimize GRUB"*)
     #:
     arch-chroot . sed -i "/GRUB_DEFAULT/ s/=.*/=saved/" /etc/default/grub
     arch-chroot . sed -i '/GRUB_SAVEDEFAULT/ s/^#//' /etc/default/grub
@@ -75,26 +63,28 @@ if [ -v BETTER_GRUB ]; then
         -e '/+ vbox {/,/^}/{/top =/s/+113.*/+200/;s/"Unifont Regular 14"/"Unifont Regular 16"/}' \
         theme.txt
     popd
-fi
-
-if [ -v ENCREASE_CONSOLEFONTSIZE ]; then
+    ;;&
+*"enlarge console font"*)
     pacstrap . terminus-font
     echo 'FONT=ter-i32b' | tee -a etc/vconsole.conf
-fi
-
-if [ -v EXISTED_WINDOWS ]; then
-    pacstrap . os-prober ntfs-3g
-    arch-chroot . sed -i '/^#GRUB_DISABLE_OS_PROBER/ s/^#//' /etc/default/grub
-fi
-
-if [ -v ADD_FIREFOX ]; then
+    ;;&
+*"add Firefox browser"*)
     pacstrap . firefox
     arch-chroot . cp /usr/share/applications/firefox.desktop /usr/share/applications/firefox-wayland.desktop
     arch-chroot . sed -i -e 's/^Name=Firefox$/Name=Wayland Firefox/' -e 's/^Exec=/Exec=env MOZ_ENABLE_WAYLAND=1 /' /usr/share/applications/firefox-wayland.desktop
-    [ -v ADD_FIREFOX_EXT ] &&
+    if (whiptail --title ' Firefox extensions? ' --yesno '  add recommended:\n
+- Dark Reader
+- decentraleyes
+- uBlock Origin
+- Tree Style Tab
+' 12 26); then
         pacstrap . firefox-dark-reader firefox-decentraleyes firefox-ublock-origin firefox-tree-style-tab
-fi
-
-[ -v ADD_DEVUTILS ] && pacstrap . base-devel man-db unzip tree
-
-[ -v ADD_CODING_FONTS ] && pacstrap . ttf-cascadia-code
+    fi
+    ;;&
+*"add development utils"*)
+    pacstrap . "${DEVUTIL_PKGS[@]}"
+    ;;&
+*"add Cascadia Code font"*)
+    pacstrap . ttf-cascadia-code
+    ;;&
+esac

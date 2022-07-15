@@ -2,16 +2,16 @@
 set -e
 cd /mnt/archinstall
 
-pacstrap . noto-fonts-cjk reflector
 arch-chroot . sed -i "/^#zh_CN.U/ s/^#//" /etc/locale.gen
 arch-chroot . locale-gen
-arch-chroot . sed -i '/^--sort/ s/age/rate/' /etc/xdg/reflector/reflector.conf
-echo "-c cn" | arch-chroot . tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
-arch-chroot . systemctl restart reflector
-arch-chroot . pacman -Sy
+
+pacstrap . reflector
+cp /etc/xdg/reflector/reflector.conf ./etc/xdg/reflector/reflector.conf
+cp /etc/pacman.d/mirrorlist ./etc/pacman.d/mirrorlist
+pacstrap . noto-fonts-cjk
 
 [ "$(arch-chroot . pacman -Qs '^gnome$')" ] &&
     arch-chroot . pacman -Rns --noconfirm gnome-weather gnome-maps
 
 [ "$(arch-chroot . pacman -Qs firefox)" ] &&
-    pacstrap . firefox-i18n-zh-cn || printf ''
+    pacstrap . firefox-i18n-zh-cn || :
