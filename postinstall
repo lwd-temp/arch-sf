@@ -45,7 +45,7 @@ fi
 
 if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
     pacstrap . packagekit-qt5 || :
-    pacstrap . kate yakuake gwenview kgraphviewer kcalc
+    pacstrap . kate yakuake gwenview kgraphviewer kcalc kget
 fi
 
 case "$choice" in
