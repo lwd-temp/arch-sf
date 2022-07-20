@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-DEVUTIL_PKGS=(git base-devel man-db unzip tree)
+DEVUTIL_PKGS=(git base-devel man-db unzip tree moreutils)
 
 # Whiptail auto-size
 WT_MENU_HEIGHT=6
