@@ -3,8 +3,9 @@ cd /mnt/archinstall
 
 genfstab -U . >etc/fstab
 sed -i '/btrfs/ s/,subvolid=[0-9]*,/,/' etc/fstab
-arch-chroot . grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot . mkinitcpio -P
 arch-chroot . grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+arch-chroot . grub-mkconfig -o /boot/grub/grub.cfg
 
 if [ -d usr/share/grub/themes/breeze ]; then
     cp -r usr/share/grub/themes/breeze boot/grub/themes

@@ -5,7 +5,7 @@ cd /mnt/archinstall
 arch-chroot . sed -i "/^#zh_CN.U/ s/^#//" /etc/locale.gen
 arch-chroot . locale-gen
 
-pacstrap . reflector
+pacstrap . reflector traceroute
 cp /etc/xdg/reflector/reflector.conf ./etc/xdg/reflector/reflector.conf
 cp /etc/pacman.d/mirrorlist ./etc/pacman.d/mirrorlist
 pacstrap . noto-fonts-cjk

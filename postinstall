@@ -38,6 +38,7 @@ echo
 cd /mnt/archinstall
 
 pacstrap . lsb-release ufw
+arch-chroot . systemctl enable ufw
 
 if [ "$(arch-chroot . pacman -Qs ^libxcb$)" ]; then
     pacstrap . noto-fonts-emoji gufw qbittorrent
@@ -45,7 +46,7 @@ fi
 
 if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
     pacstrap . packagekit-qt5 || :
-    pacstrap . kate yakuake gwenview kgraphviewer kcalc kget okular
+    pacstrap . kate yakuake gwenview kgraphviewer kcalc kget okular sweeper
 fi
 
 case "$choice" in
