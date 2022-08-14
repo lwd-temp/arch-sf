@@ -42,9 +42,9 @@ while :; do
         mount "$DEVICE_FILE" /mnt/btrfs
         btrfs subvol create /mnt/btrfs/@
         btrfs subvol create /mnt/btrfs/@home
+        btrfs subvol create /mnt/btrfs/@var
         umount /mnt/btrfs
         rmdir /mnt/btrfs
-        mkdir -p /mnt/archinstall
         ;;
     2)
         while :; do
@@ -71,9 +71,14 @@ while :; do
     break
 done
 
-mount -o relatime,compress=zstd:1,space_cache=v2,subvol=@ "$DEVICE_FILE" /mnt/archinstall
-mkdir -p /mnt/archinstall/home
-mount -o relatime,compress=zstd:1,space_cache=v2,subvol=@home "$DEVICE_FILE" /mnt/archinstall/home
+mountbtrfs() {
+    mkdir -p /mnt/archinstall/$1
+    mount -o relatime,compress=zstd:1,space_cache=v2,subvol=@$1 "$DEVICE_FILE" /mnt/archinstall/$1
+}
+
+mountbtrfs
+mountbtrfs home
+mountbtrfs var
 
 echo
 echo 'mount | grep /mnt/archinstall :'
