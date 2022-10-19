@@ -10,6 +10,7 @@ source ./lib/checkcfg-postfix
 ./lib/postfix-grub
 ./lib/postfix-gnome
 ./lib/postfix-kde
+./lib/postfix-fcitx
 ./lib/postfix-firefox
 ./lib/postfix-development
 ./lib/postfix-others

@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$ADD_FCITX5" != 1 ]; then
+    exit
+fi
+
+cat <<END | sudo tee etc/profile.d/fcitx5.sh >/dev/null
+if [ ! "\$XDG_SESSION_TYPE" = "tty" ]
+then
+    export INPUT_METHOD=fcitx
+    export GTK_IM_MODULE=fcitx
+    export QT_IM_MODULE=fcitx
+    export XMODIFIERS=@im=fcitx
+fi
+END
+
+sudo pacman -S --noconfirm fcitx5-im fcitx5-chinese-addons fcitx5-pinyin-zhwiki
+
+if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
+    sudo pacman -S --noconfirm kcm-fcitx5
+fi

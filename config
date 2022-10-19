@@ -1,8 +1,6 @@
 # boost up download time
 export ARCHINSTALL_PARALLEL=1
 
-export IS_REGION_IN_CHINA=0
-
 export UPDATE_MIRROR=1
 
 # boost up shutdown wait time
@@ -25,3 +23,6 @@ export ADD_FIREFOX_EXT=0
 export ADD_QBITTORRENT=0
 export ADD_DEJADUP=0
 export ADD_TLP=0
+
+export IS_REGION_IN_CHINA=0
+export ADD_FCITX5=0

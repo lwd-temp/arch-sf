@@ -2,8 +2,6 @@
 echo '== Check Config =='
 echo 'Edit `./config*` before setup. Reference: `./samples/*`'
 echo
-echo IS_REGION_IN_CHINA=$IS_REGION_IN_CHINA
-echo
 echo UPDATE_MIRROR=$UPDATE_MIRROR
 echo
 echo SETC_FASTER_SHUTDOWN=$SETC_FASTER_SHUTDOWN
@@ -22,6 +20,9 @@ echo ADD_FIREFOX_EXT=$ADD_FIREFOX_EXT
 echo
 echo ADD_QBITTORRENT=$ADD_QBITTORRENT
 echo ADD_DEJADUP=$ADD_DEJADUP
+echo
+echo IS_REGION_IN_CHINA=$IS_REGION_IN_CHINA
+echo ADD_FCITX5=$ADD_FCITX5
 echo
 printf 'Confirm to setup? (Y/n) '
 read r

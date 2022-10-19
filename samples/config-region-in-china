@@ -1,1 +1,2 @@
 export IS_REGION_IN_CHINA=1
+export ADD_FCITX5=1
