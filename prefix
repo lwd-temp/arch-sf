@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+set -e
+cd $(dirname $0)
+
+source ./lib/loadcfg
+source ./lib/checkcfg-prefix
+
+if [ "$ARCHINSTALL_PARALLEL" = 1 ]; then
+    sed -i '/^#Parall/ s/^#//' /etc/pacman.conf
+fi
+
+if [ "$IS_REGION_IN_CHINA" = 1 ]; then
+    pushd /etc/xdg/reflector >/dev/null
+
+    echo "-c cn" | tee -a reflector.conf &>/dev/null
+    sed -i '/latest/s/20/5/' reflector.conf
+
+    echo
+    echo 'Testing connectivity to the Arch Linux mirrors ...'
+    systemctl restart reflector
+    pacman -Sy --noconfirm
+
+    popd >/dev/null
+fi

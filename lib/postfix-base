@@ -1,0 +1,33 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+pacstrap . lsb-release
+
+if [ "$UPDATE_MIRROR" = 1 ];then
+    pushd /mnt/archinstall >/dev/null
+    echo
+    echo 'Testing connectivity to the Arch Linux mirrors ...'
+    systemctl restart reflector
+    pacstrap . reflector
+    cp /etc/xdg/reflector/reflector.conf etc/xdg/reflector/reflector.conf
+    cp /etc/pacman.d/mirrorlist etc/pacman.d/mirrorlist
+    popd >/dev/null
+fi
+
+if [ "$(arch-chroot . pacman -Qs ^libxcb$)" ]; then
+    pacstrap . noto-fonts-emoji
+
+    pacstrap . gufw
+    arch-chroot . systemctl enable ufw
+fi
+
+if [ "$ADD_TLP" = 1 ]; then
+    pacstrap . tlp tlp-rdw
+    arch-chroot . systemctl enable tlp.service
+    arch-chroot . systemctl mask systemd-rfkill.{service,socket}
+fi
+
+if [ "$IS_REGION_IN_CHINA" = 1 ]; then
+    pacstrap . noto-fonts-cjk
+fi

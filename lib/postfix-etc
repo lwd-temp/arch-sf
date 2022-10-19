@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$SETC_FASTER_SHUTDOWN" = 1 ]; then
+    sed -i '/DefaultTimeoutStopSec/{s/#//;s/=90s/=10s/}' etc/systemd/system.conf
+fi
+
+if [ "$SETC_LARGE_CFONT" = 1 ]; then
+    pacstrap . terminus-font
+    line='FONT=ter-i28b'
+    if ! grep -qF $line etc/vconsole.conf; then
+        echo $line | tee -a etc/vconsole.conf
+    fi
+fi

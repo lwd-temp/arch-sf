@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$ADD_DEVELOPMENT" = 1 ]; then
+    pacstrap . git base-devel traceroute man-db unzip tree moreutils zsh ttf-cascadia-code
+    if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
+        pacstrap . yakuake kate kgraphviewer
+    fi
+fi

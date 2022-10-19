@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$GRUB_OPTIMZE" = 1 ]; then
+    sed -i '/GRUB_DEFAULT/ s/=.*/=saved/' etc/default/grub
+    sed -i '/GRUB_SAVEDEFAULT/ s/^#//' etc/default/grub
+    sed -i '/GRUB_TIMEOUT/ s/=.*/=2/' etc/default/grub
+fi
+
+if [ "$GRUB_USE_BETTER_THEME" = 1 ]; then
+    pacstrap . breeze-grub
+    echo 'GRUB_THEME=/boot/grub/themes/breeze/theme.txt' | tee -a etc/default/grub &>/dev/null
+
+    pushd usr/share/grub/themes/breeze >/dev/null
+    cp -n theme.txt theme.txt.bak
+
+    sed \
+    -e '/# title/,/}/{/top/s/225.*/256/}' \
+    -e '/+ boot_menu {/,/}/{s/400/800/;s/200/400/;/item_height =/s/33/64/;/font =/s/16/32/}' \
+    -e '/+ vbox {/,/^}/{/top =/s/+113.*/+200/;s/"Unifont Regular 14"/"Unifont Regular 16"/}' \
+    -i theme.txt
+
+    popd >/dev/null
+
+    cp -r usr/share/grub/themes/breeze boot/grub/themes
+fi
+
+if [ "$GRUB_ADD_WINBOOT_AUTO" = 1 ]; then
+    sed -i '/^#GRUB_DISABLE_OS_PROBER/ s/^#//' etc/default/grub
+    pacstrap . os-prober ntfs-3g
+fi

@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$ADD_QBITTORRENT" = 1 ]; then
+    pacstrap . qbittorrent
+fi
+
+if [ "$ADD_DEJADUP" = 1 ]; then
+    pacstrap . deja-dup
+fi

@@ -1,0 +1,27 @@
+# boost up download time
+export ARCHINSTALL_PARALLEL=1
+
+export IS_REGION_IN_CHINA=0
+
+export UPDATE_MIRROR=1
+
+# boost up shutdown wait time
+export SETC_FASTER_SHUTDOWN=0
+# use larger console font size
+export SETC_LARGE_CFONT=0
+
+export GRUB_OPTIMZE=1
+export GRUB_USE_BETTER_THEME=1
+export GRUB_ADD_WINBOOT_AUTO=0
+
+# add development tools
+export ADD_DEVELOPMENT=0
+
+# add Firefox
+export ADD_FIREFOX=0
+export ADD_FIREFOX_EXT=0
+
+# add softwares
+export ADD_QBITTORRENT=0
+export ADD_DEJADUP=0
+export ADD_TLP=0

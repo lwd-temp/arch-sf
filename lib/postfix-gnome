@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$(arch-chroot . pacman -Qs '^gnome$')" ]; then
+    :
+fi

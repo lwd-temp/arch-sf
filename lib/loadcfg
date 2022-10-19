@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+. ./config
+for cfg in $(find . -maxdepth 1 -name 'config-*'); do
+    . $cfg
+done
+
+if [ -f ./config-rewrite ]; then
+    . ./config-rewrite
+fi

@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "**/config*": "shellscript",
+        "**/prefix": "shellscript",
+        "**/postfix": "shellscript",
+        "**/lib/*": "shellscript",
+        "**/samples/*": "shellscript"
+    }
+}

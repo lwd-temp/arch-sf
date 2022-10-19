@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$ADD_FIREFOX" != 1 ]; then
+    exit
+fi
+
+pacstrap . firefox
+cp usr/share/applications/firefox.desktop usr/share/applications/firefox-wayland.desktop
+sed -i -e 's/^Name=Firefox$/Name=Wayland Firefox/' -e 's/^Exec=/Exec=env MOZ_ENABLE_WAYLAND=1 /' usr/share/applications/firefox-wayland.desktop
+
+if [ "$ADD_FIREFOX_EXT" = 1 ]; then
+    pacstrap . \
+        firefox-dark-reader firefox-decentraleyes firefox-ublock-origin firefox-tree-style-tab
+fi
+
+if [ "$IS_REGION_IN_CHINA" = 1 ]; then
+    pacstrap . firefox-i18n-zh-cn
+fi

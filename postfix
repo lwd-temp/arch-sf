@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+set -e
+cd $(dirname $0)
+
+source ./lib/loadcfg
+source ./lib/checkcfg-postfix
+
+./lib/postfix-base
+./lib/postfix-etc
+./lib/postfix-grub
+./lib/postfix-gnome
+./lib/postfix-kde
+./lib/postfix-firefox
+./lib/postfix-development
+./lib/postfix-others
+
+cd /mnt/archinstall
+genfstab -U . >etc/fstab
+arch-chroot . mkinitcpio -P
+arch-chroot . grub-install --target=x86_64-efi --efi-directory=boot/efi --bootloader-id=GRUB
+arch-chroot . grub-mkconfig -o boot/grub/grub.cfg

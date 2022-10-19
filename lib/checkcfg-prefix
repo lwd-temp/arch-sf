@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+echo '== Check Config =='
+echo 'Edit `./config*` before setup. Reference: `./samples/*`'
+echo
+echo IS_REGION_IN_CHINA=$IS_REGION_IN_CHINA
+echo
+echo ARCHINSTALL_PARALLEL=$ARCHINSTALL_PARALLEL
+echo
+printf 'Confirm to setup? (Y/n) '
+read r
+case $r in
+'' | y | Y) ;;
+*) exit ;;
+esac

@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+set -e
+cd /mnt/archinstall
+
+if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
+    pacstrap . packagekit-qt5 || :
+    pacstrap . gwenview kcalc kget okular sweeper
+fi
