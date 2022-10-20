@@ -16,8 +16,8 @@ then
 fi
 END
 
-sudo pacman -S --noconfirm fcitx5-im fcitx5-chinese-addons fcitx5-pinyin-zhwiki
+pacstrap . fcitx5-im fcitx5-chinese-addons fcitx5-pinyin-zhwiki
 
 if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
-    sudo pacman -S --noconfirm kcm-fcitx5
+    pacstrap . kcm-fcitx5
 fi

@@ -5,3 +5,5 @@ cd /mnt/archinstall
 if [ "$(arch-chroot . pacman -Qs '^gnome$')" ]; then
     :
 fi
+
+pacstrap . gnome-disk-utility
