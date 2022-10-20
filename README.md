@@ -1,30 +1,11 @@
 # Arch Setup Framework
 
-## Get Started
-
-1. partition your storage disk, using `diskmgmt.msc` on Windows:
-   - EFI system partition
-   - `/boot` partition, formatted FAT32 better
-   - `/` partition, no formatted
-2. git clone this into `/boot` partition
-3. edit your config refer to samples
-
-### Copy To EFI partition by Windows
-
-run as administrator:
-
-```
-mountvol u: /s
-git clone https://github.com/setupfw/arch-sf
-```
-
-## Usage
-
 1. Boot in Arch Linux ISO
-2. mount boot partition, cd it
-3. run `./prefix`
-4. run `archinstall`, **donot reboot**
-5. run `./postfix`
+2. git clone this project
+3. edit `./config`, refer to `./samples/config-*`
+4. run `./prefix`
+5. run `archinstall`, **donot reboot**
+6. run `./postfix`
 
 ### archinstall
 
@@ -62,9 +43,3 @@ git clone https://github.com/setupfw/arch-sf
 - **Timezone**
 
   e.g. search `hai` to select **Asia/Shanghai**
-
-## Tips
-
-Low Resolution:
-
-press `e` on grub menu, add `nomodeset video=640x360` to the end of `linux`
