@@ -14,6 +14,8 @@ export GRUB_ADD_WINBOOT_AUTO=0
 
 # add development tools
 export ADD_DEVELOPMENT=0
+export ADD_LIBVIRT=0
+export ADD_CODEOSS=0
 
 # add Firefox
 export ADD_FIREFOX=0
@@ -21,8 +23,9 @@ export ADD_FIREFOX_EXT=0
 
 # add softwares
 export ADD_QBITTORRENT=0
-export ADD_DEJADUP=0
+export ADD_VLC=0
 export ADD_TLP=0
+export ADD_DEJADUP=0
 
 export IS_REGION_IN_CHINA=0
 export ADD_FCITX5=0

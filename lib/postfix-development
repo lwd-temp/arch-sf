@@ -3,8 +3,22 @@ set -e
 cd /mnt/archinstall
 
 if [ "$ADD_DEVELOPMENT" = 1 ]; then
-    pacstrap . git base-devel traceroute man-db unzip tree moreutils zsh ttf-cascadia-code
+    pacstrap . git base-devel traceroute man-db unzip tree moreutils zsh ttf-cascadia-code vim neovim
+
+    if [ "$(arch-chroot . pacman -Qs ^libxcb$)" ]; then
+        pacstrap . gvim neovim-qt
+    fi
+
     if [ "$(arch-chroot . pacman -Qs plasma-desktop)" ]; then
         pacstrap . yakuake kate kgraphviewer
     fi
+fi
+
+if [ "$ADD_LIBVIRT" = 1 ]; then
+    pacstrap . virt-manager qemu-desktop libvirt edk2-ovmf dnsmasq iptables-nft
+    arch-chroot . systemctl enable --now libvirtd
+fi
+
+if [ "$ADD_CODEOSS" = 1 ]; then
+    pacstrap . code
 fi

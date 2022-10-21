@@ -2,10 +2,18 @@
 set -e
 cd /mnt/archinstall
 
-if [ "$ADD_QBITTORRENT" = 1 ]; then
-    pacstrap . qbittorrent
+list=()
+
+if [ "$ADD_VLC" = 1 ]; then
+    list+=('vlc')
 fi
 
 if [ "$ADD_DEJADUP" = 1 ]; then
-    pacstrap . deja-dup
+    list+=('deja-dup')
 fi
+
+if [ "$ADD_QBITTORRENT" = 1 ]; then
+    list+=('qbittorrent')
+fi
+
+pacstrap . ${list[*]}
