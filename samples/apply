@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 samplesdir=samples
-rm config-*
+rm -f config-*
 for samplefile in $samplesdir/config-*; do
     cp -f $samplefile $(basename $samplefile)
 done

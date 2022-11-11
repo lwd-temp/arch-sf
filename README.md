@@ -1,11 +1,21 @@
 # Arch Setup Framework
 
-1. Boot in Arch Linux ISO
-2. git clone this project
-3. edit `./config`, refer to `./samples/config-*`
-4. run `./prefix`
-5. run `archinstall`, **donot reboot**
-6. run `./postfix`
+1.  Boot in Arch Linux ISO
+2.  Execute
+
+        pacman -Sy git
+
+3.  git clone this project
+
+        git clone https://github.com/setupfw/arch-sf
+
+4.  edit `./config`, refer to `./samples/config-*`
+5.  run `./prefix`
+6.  Execute, **donot reboot** after finished
+
+        archinstall --config ./user_configuration.json
+
+7.  run `./postfix`
 
 ### archinstall
 

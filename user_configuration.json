@@ -1,0 +1,32 @@
+{
+  "sys-language": "en_US",
+  "bootloader": "grub-install",
+  "audio": "pipewire",
+  "gfx_driver": "All open-source (default)",
+  "desktop-environment": "kde",
+  "kernels": ["linux-lts"],
+  "timezone": "UTC",
+  "mirror-region": {},
+  "ntp": true,
+  "nic": {
+    "type": "nm",
+    "dhcp": true,
+    "dns": null,
+    "gateway": null,
+    "iface": null,
+    "ip": null
+  },
+  "keyboard-layout": "us",
+  "sys-encoding": "UTF-8",
+  "archinstall-language": "English",
+  "profile": {
+    "path": "/usr/lib/python3.10/site-packages/archinstall/profiles/desktop.py"
+  },
+  "script": "guided",
+  "silent": false,
+  "offline": false,
+  "debug": false,
+  "no_pkg_lookups": false,
+  "version": "2.5.1",
+  "config_version": "2.5.1"
+}
