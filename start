@@ -3,17 +3,21 @@ set -e
 cd $(dirname $0)
 
 source ./lib/loadcfg
-source ./lib/checkcfg-postfix
+source ./lib/checkcfg
 
-./lib/postfix-base
-./lib/postfix-etc
-./lib/postfix-grub
-./lib/postfix-gnome
-./lib/postfix-kde
-./lib/postfix-fcitx
-./lib/postfix-firefox
-./lib/postfix-development
-./lib/postfix-others
+./lib/prefix
+
+archinstall --config ./user_configuration.json
+
+./lib/postrun/base
+./lib/postrun/etc
+./lib/postrun/grub
+./lib/postrun/gnome
+./lib/postrun/kde
+./lib/postrun/fcitx
+./lib/postrun/firefox
+./lib/postrun/development
+./lib/postrun/others
 
 cd /mnt/archinstall
 genfstab -U . >etc/fstab

@@ -10,12 +10,7 @@
         git clone https://github.com/setupfw/arch-sf
 
 4.  edit `./config`, refer to `./samples/config-*`
-5.  run `./prefix`
-6.  Execute, **donot reboot** after finished
-
-        archinstall --config ./user_configuration.json
-
-7.  run `./postfix`
+5.  run `./start`
 
 ### archinstall
 

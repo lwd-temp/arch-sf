@@ -1,9 +1,5 @@
 #!/usr/bin/bash
 set -e
-cd $(dirname $0)
-
-source ./lib/loadcfg
-source ./lib/checkcfg-prefix
 
 if [ "$ARCHINSTALL_PARALLEL" = 1 ]; then
     sed -i '/^#Parall/ s/^#//' /etc/pacman.conf
